@@ -5,8 +5,8 @@ from RestService import RequestService, HttpMethods
 
 class HelmRest(RequestService):
 
-    def list_helm_charts(self, name):
-        get = self.request_action(HttpMethods.GET.value, self.url, {'chart': name})
+    def list_helm_charts(self):
+        get = self.request_action(HttpMethods.GET.value, self.url)
         status = get.status_code
         if status == requests.codes.no_content:
             raise Exception(f"Chart was not found on repository! {status}")
