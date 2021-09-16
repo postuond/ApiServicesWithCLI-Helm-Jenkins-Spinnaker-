@@ -1,13 +1,12 @@
-import os
 import requests
 import requests.auth
-from RestService import RequestService,HttpMethods
+from RestService import RequestService, HttpMethods
 
 
-class HelmRest(RequestService, HttpMethods):
+class HelmRest(RequestService):
 
-    def list_helm_charts(self, chart_name):
-        get = self.request_action(HttpMethods.GET.value, self.url + chart_name)
+    def list_helm_charts(self, name):
+        get = self.request_action(HttpMethods.GET.value, self.url, {'chart': name})
         status = get.status_code
         if status == requests.codes.no_content:
             raise Exception(f"Chart was not found on repository! {status}")
@@ -19,8 +18,8 @@ class HelmRest(RequestService, HttpMethods):
             raise Exception(f"Something went wrong with authorization! {status}")
         return
 
-    def post_helm_chart(self, chart_name):
-        post = self.request_action(HttpMethods.POST.value, self.url, {"charts": chart_name})
+    def post_helm_chart(self, name):
+        post = self.request_action(HttpMethods.POST.value, self.url, {'chart': name})
         status = post.status_code
         if status != requests.codes.created:
             raise Exception(f"Chart uploading has failed with {status}")
@@ -30,8 +29,8 @@ class HelmRest(RequestService, HttpMethods):
             raise Exception(f"Something went wrong with authorization! {status}")
         return
 
-    def delete_helm_chart(self, chart_name):
-        delete = self.request_action(HttpMethods.DELETE.value, self.url + chart_name)
+    def delete_helm_chart(self, name):
+        delete = self.request_action(HttpMethods.DELETE.value, f"{self.url}/{name}")
         status = delete.status_code
         if status == requests.codes.no_content:
             raise Exception(f"Chart was not found on repository! {status}")
@@ -42,3 +41,4 @@ class HelmRest(RequestService, HttpMethods):
         elif status == requests.codes.unauthorized:
             raise Exception(f"Something went wrong with authorization! {status}")
         return
+

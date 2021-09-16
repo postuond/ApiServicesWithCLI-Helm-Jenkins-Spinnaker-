@@ -24,6 +24,7 @@ class RequestService:
 
             res = requests.request(method,
                                    url,
+                                   auth=auth,
                                    files=None,
                                    headers=headers,
                                    allow_redirects=False)
